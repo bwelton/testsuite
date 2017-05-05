@@ -78,6 +78,7 @@ platform_module(P, 'instruction') :- platform('i386', _, _, P).
 platform_module(P, 'instruction') :- platform('x86_64', _, _, P).
 platform_module(P, 'instruction') :- platform('power32', _, _, P).
 platform_module(P, 'instruction') :- platform('power64', _, _, P).
+platform_module(P, 'instruction') :- platform('aarch64', _, _, P).
 platform_module(P, 'proccontrol') :- platform(_, 'linux', _, P).
 platform_module(P, 'proccontrol') :- platform(_, 'freebsd', _, P).
 platform_module(P, 'proccontrol') :- platform(_, 'bluegene', _, P).
@@ -596,36 +597,7 @@ test_runmode('test1_34', 'staticdynamic').
 test_start_state('test1_34', 'stopped').
 tests_module('test1_34', 'dyninst').
 
-test('test1_35', 'test1_35', 'test1_35').
-test_description('test1_35', 'Function Relocation').
-test_platform('test1_35', 'i386-unknown-linux2.4').
-test_platform('test1_35', 'i386-unknown-linux2.6').
-test_platform('test1_35', 'x86_64-unknown-linux2.4').
-test_platform('test1_35', 'i386-unknown-freebsd7.2').
-test_platform('test1_35', 'amd64-unknown-freebsd7.2').
-groupable_test('test1_35').
-mutator('test1_35', ['test1_35.C']).
-mutatee('test1_35', ['test1_35_mutatee.c', Sources]) :-
-    current_platform(Plat), platform(Arch, OS, _, Plat),
-    (
-        (Arch = 'x86_64', OS = 'linux') ->
-            Sources = 'call35_1_x86_64_linux.s';
-        (Arch = 'i386', OS = 'linux') ->
-            Sources = 'call35_1_x86_linux.s';
-        (Arch = 'i386', OS = 'freebsd') ->
-            Sources = 'call35_1_x86_linux.s';
-        (Arch = 'x86_64', OS = 'freebsd') ->
-            Sources = 'call35_1_x86_64_linux.s';
-        Sources = 'call35_1.c'
-    ).
-% test1_35s mutatee can be compiled with any C compiler
-compiler_for_mutatee('test1_35', Compiler) :-
-    comp_lang(Compiler, 'c').
-test_runmode('test1_35', 'staticdynamic').
-test_start_state('test1_35', 'stopped').
-restricted_amd64_abi('test1_35').
-tests_module('test1_35', 'dyninst').
-mutatee_format('test1_35', 'staticMutatee').
+% test1_35 deleted due to emptiness
 
 test('test1_36', 'test1_36', 'dyninst_group_test').
 test_description('test1_36', 'Callsite Parameter Referencing').
@@ -2288,7 +2260,8 @@ test_description('test_instruction_read_write', 'Tests the read & write sets of 
 test_platform('test_instruction_read_write', Platform) :-
         platform(Platform),
         platform('i386', _, _, Platform);
-        platform('x86_64', _, _, Platform).
+        platform('x86_64', _, _, Platform);
+	platform('aarch64', _, _, Platform).
 mutator('test_instruction_read_write', ['test_instruction_read_write.C']).
 test_runmode('test_instruction_read_write', 'disk').
 test_start_state('test_instruction_read_write', 'stopped').
@@ -2321,7 +2294,8 @@ test_description('test_instruction_profile', 'Collect profiling data from decodi
 test_platform('test_instruction_profile', Platform) :-
         platform(Platform),
         platform('i386', OS, _, Platform), OS \= 'windows';
-        platform('x86_64', OS, _, Platform), OS \= 'windows'.
+        platform('x86_64', OS, _, Platform), OS \= 'windows';
+	platform('aarch64', OS, _, Platform), OS \= 'windows'.
 mutator('test_instruction_profile', ['test_instruction_profile.C']).
 test_runmode('test_instruction_profile', 'disk').
 test_start_state('test_instruction_profile', 'stopped').
