@@ -808,19 +808,22 @@ bool ProcControlComponent::startMutatees(RunGroup *group, ParameterDict &param)
 
 test_results_t ProcControlComponent::program_setup(ParameterDict &params)
 {
+   test_results_t ret = PASSED;
 #if defined(USE_SOCKETS)
-	setupServerSocket(params);
+	if(!setupServerSocket(params)) 
+      ret = FAILED;
 #endif
-	return PASSED;
+	return ret;
 }
 
 test_results_t ProcControlComponent::program_teardown(ParameterDict &params)
 {
-
+   test_results_t ret = PASSED;
 #if defined(USE_SOCKETS)
-	cleanSocket();
+	if (!cleanSocket())
+      ret = FAILED;
 #endif
-   return PASSED;
+   return ret;
 }
 
 test_results_t ProcControlComponent::group_setup(RunGroup *group, ParameterDict &params)
